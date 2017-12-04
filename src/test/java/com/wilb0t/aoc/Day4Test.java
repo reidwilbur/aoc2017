@@ -76,6 +76,6 @@ public class Day4Test {
   @Test
   public void testIsValidPassphaseAnagram_input1() {
     long valid = input1.stream().map(testInst::isValidPassphraseAnagram).filter(b -> b).count();
-    assertThat(valid, is(466L));
+    assertThat(valid, is(251L));
   }
 }
