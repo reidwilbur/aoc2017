@@ -65,42 +65,42 @@ public class Day7 {
       adjust = sortedWeights.get(0) - sortedWeights.get(i);
     }
 
-    System.out.println(sortedWeights);
-    System.out.println(String.format("%s %d", badNode, adjust));
+    //System.out.println(sortedWeights);
+    //System.out.println(String.format("%s %d", badNode, adjust));
     return badNode.weight + adjust;
   }
 
   Optional<Node> findBadNode(Map<String, Node> nodes, Node n, String indent) {
-    System.out.println(indent + n);
+    //System.out.println(indent + n);
     if (n.children.size() == 0) {
       System.out.println(indent + "leaf");
       return Optional.empty();
     }
 
     if (n.subTreeWeights.stream().allMatch(w -> w.equals(n.subTreeWeights.get(0)))) {
-      System.out.println(indent + "Found wrong node");
+      //System.out.println(indent + "Found wrong node");
       return Optional.of(n);
     }
 
     int badSubtreeIdx = 0;
     int childSize = n.subTreeWeights.size();
-    System.out.println(indent + n.subTreeWeights);
+    //System.out.println(indent + n.subTreeWeights);
     for(int i = 0; i < childSize; i++) {
       if (!n.subTreeWeights.get(i).equals(n.subTreeWeights.get((i + 1) % childSize))
           && !n.subTreeWeights.get(i).equals(n.subTreeWeights.get((i + childSize - 1) % childSize))) {
         badSubtreeIdx = i;
       }
     }
-    System.out.println(indent + String.format("%d %s", badSubtreeIdx, n.children.get(badSubtreeIdx)));
+    //System.out.println(indent + String.format("%d %s", badSubtreeIdx, n.children.get(badSubtreeIdx)));
 
     Optional<Node> badNodeOpt = findBadNode(nodes, nodes.get(n.children.get(badSubtreeIdx)), indent + "  ");
 
     if (badNodeOpt.isPresent()) {
-      System.out.println(indent + "Forwarding child node " + badNodeOpt.get());
+      //System.out.println(indent + "Forwarding child node " + badNodeOpt.get());
       return badNodeOpt;
     }
 
-    System.out.println(indent + "All nodes correct in this tree");
+    //System.out.println(indent + "All nodes correct in this tree");
     return Optional.empty();
   }
 
