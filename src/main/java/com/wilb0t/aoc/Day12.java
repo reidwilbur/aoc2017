@@ -28,14 +28,16 @@ public class Day12 {
 
     while(!toProcess.isEmpty()) {
       int n = toProcess.remove();
-      connected.add(n);
-      adjList.get(n)
-          .stream()
-          .filter(cn -> !visited.containsKey(cn))
-          .forEach(cn -> {
-            visited.put(cn, true);
-            toProcess.add(cn);
-          });
+      //if (adjList.get(n).size() > 0) {
+        connected.add(n);
+        adjList.get(n)
+            .stream()
+            .filter(cn -> !visited.containsKey(cn))
+            .forEach(cn -> {
+              visited.put(cn, true);
+              toProcess.add(cn);
+            });
+      //}
     }
     return connected;
   }
@@ -46,9 +48,11 @@ public class Day12 {
 
     IntStream.range(0, adjList.size()).forEach(n -> {
       if (!visited.containsKey(n)) {
-        List<Integer> nodes = connectedNodes(n, adjList);
-        connected.add(nodes);
-        nodes.forEach(cxn -> visited.put(cxn, true));
+        if (adjList.get(n).size() > 0) {
+          List<Integer> nodes = connectedNodes(n, adjList);
+          connected.add(nodes);
+          nodes.forEach(cxn -> visited.put(cxn, true));
+        }
       }
     });
 

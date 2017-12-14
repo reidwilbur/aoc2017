@@ -28,7 +28,7 @@ public class Day10 {
     return mValues.get(0) * mValues.get(1);
   }
 
-  String knotHash(String input) {
+  public String knotHash(String input) {
     String lengths = input + String.valueOf(new char[]{17, 31, 73, 47, 23});
 
     List<Integer> values = IntStream.range(0, VAL_LEN).boxed().collect(Collectors.toList());
