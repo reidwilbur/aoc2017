@@ -20,8 +20,12 @@ public class Day14 {
 
   int getCountForHash(String hash) {
     int count = 0;
-    for(char c : hash.toCharArray()) {
-      count += Integer.bitCount(Integer.valueOf(String.valueOf(c), 16));
+    for(char c : hash.toLowerCase().toCharArray()) {
+      if (c - 97 >= 0) {
+        count += Integer.bitCount(c - 97 + 0xa);
+      } else {
+        count += Integer.bitCount(c - 48);
+      }
     }
     return count;
   }
