@@ -7,7 +7,6 @@ import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,37 +41,30 @@ public class Day16Test {
 
   @Test
   public void testDance_test1() {
-    char[] init = "abcde".toCharArray();
-    testInst.dance(init, test1);
-    assertThat(init, is("baedc".toCharArray()));
+    assertThat(testInst.dance("abcde", test1), is("baedc"));
   }
 
   @Test
   public void testDance_input1() {
-    char[] init = "abcdefghijklmnop".toCharArray();
-    testInst.dance(init, input1);
-    assertThat(init, is("jkmflcgpdbonihea".toCharArray()));
+    assertThat(testInst.dance("abcdefghijklmnop", input1), is("jkmflcgpdbonihea"));
   }
 
   @Test
   public void testDanceItr_test1() {
-    char[] init = "abcde".toCharArray();
-    testInst.danceItr(init, test1, 2);
-    assertThat(init, is("ceadb".toCharArray()));
+    assertThat(testInst.danceItr("abcde", test1, 2), is("ceadb"));
   }
 
   @Test
   public void testShift() {
     Day16.Spin spin = new Day16.Spin("s7");
-    char[] s = "abcd".toCharArray();
-    spin.apply(s);
-    assertThat(s, is("bcda".toCharArray()));
+    assertThat(spin.apply("abcd"), is("bcda"));
   }
 
-  // takes over 1 minute to run
-  //@Test
+  @Test
   public void testDanceItr_input1() {
-    char[] init = "abcdefghijklmnop".toCharArray();
-    assertThat(testInst.danceItr(init, input1, 1000000000), is("ajcdefghpkblmion".toCharArray()));
+    assertThat(
+        testInst.danceItr("abcdefghijklmnop", input1, 1000000000),
+        is("ajcdefghpkblmion")
+    );
   }
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 public class Day16 {
 
   interface Move {
-    void apply(char[] prgms);
+    String apply(String prgms);
 
     static Move parse(String line) {
       if (line.charAt(0) == 's') {
@@ -30,12 +30,21 @@ public class Day16 {
     }
 
     @Override
-    public void apply(char[] prgms) {
-      int l = prgms.length;
-      int ofs = amt % l;
-      reverse(prgms, 0, l - 1);
-      reverse(prgms, 0, ofs - 1);
-      reverse(prgms, ofs, l - 1);
+    public String apply(String prgmsStr) {
+      StringBuilder bldr = new StringBuilder(prgmsStr.length());
+      int ofs = amt % prgmsStr.length();
+      int start = prgmsStr.length() - ofs;
+      for(int i = start; i < start + prgmsStr.length(); i++) {
+        bldr.append(prgmsStr.charAt(i % prgmsStr.length()));
+      }
+      return bldr.toString();
+    }
+
+    @Override
+    public String toString() {
+      return "Spin{" +
+             "amt=" + amt +
+             '}';
     }
   }
 
@@ -50,8 +59,20 @@ public class Day16 {
     }
 
     @Override
-    public void apply(char[] prgms) {
-      swap(prgms, p0, p1);
+    public String apply(String prgmsStr) {
+      StringBuilder bldr = new StringBuilder(prgmsStr);
+      char tmp = prgmsStr.charAt(p0);
+      bldr.setCharAt(p0, prgmsStr.charAt(p1));
+      bldr.setCharAt(p1, tmp);
+      return bldr.toString();
+    }
+
+    @Override
+    public String toString() {
+      return "Exch{" +
+             "p0=" + p0 +
+             ", p1=" + p1 +
+             '}';
     }
   }
 
@@ -66,46 +87,68 @@ public class Day16 {
     }
 
     @Override
-    public void apply(char[] prgms) {
+    public String apply(String prgmsStr) {
       int i0 = -1;
       int i1 = -1;
       for(int idx = 0; i0 == -1 || i1 == -1; idx++) {
-        if (prgms[idx] == p0) { i0 = idx; }
-        if (prgms[idx] == p1) { i1 = idx; }
+        if (prgmsStr.charAt(idx) == p0) { i0 = idx; }
+        if (prgmsStr.charAt(idx) == p1) { i1 = idx; }
       }
-      swap(prgms, i0, i1);
+      StringBuilder bldr = new StringBuilder(prgmsStr);
+      char tmp = prgmsStr.charAt(i0);
+      bldr.setCharAt(i0, prgmsStr.charAt(i1));
+      bldr.setCharAt(i1, tmp);
+      return bldr.toString();
+    }
+
+    @Override
+    public String toString() {
+      return "Part{" +
+             "p0=" + p0 +
+             ", p1=" + p1 +
+             '}';
     }
   }
 
-  static void reverse(char[] cs, int left, int right) {
-    while(left < right) {
-      swap(cs, left, right);
-      left++;
-      right--;
+  String dance(String prgms, List<Move> moves) {
+    return moves.stream()
+        .reduce(
+            prgms,
+            (p, m) -> m.apply(p),
+            (oldS, newS) -> newS
+        );
+  }
+
+  static class Pair {
+    public final int idx;
+    public final String s;
+
+    private Pair(int idx, String s) {
+      this.idx = idx;
+      this.s = s;
+    }
+
+    static Pair of(int idx, String s) {
+      return new Pair(idx, s);
     }
   }
 
-  static void swap(char[] cs, int p0, int p1) {
-    char tmp = cs[p0];
-    cs[p0] = cs[p1];
-    cs[p1] = tmp;
-  }
-
-  char[] dance(char[] prgms, List<Move> moves) {
-    for(int i = 0; i < moves.size(); i++) {
-      moves.get(i).apply(prgms);
-    }
-    return prgms;
-  }
-
-  char[] danceItr(char[] init, List<Move> moves, int itrs) {
-    Map<String, String> cache = new HashMap<>();
+  String danceItr(String init, List<Move> moves, int itrs) {
+    Map<String, Pair> cache = new HashMap<>();
     for(int i = 0; i < itrs; i++) {
-      if ((i & 0x3ff) == 0) System.out.println(i);
-      if (cache.containsKey(String.valueOf(init))) {
-        init = cache.get(String.valueOf(init)).toCharArray();
+      if (cache.containsKey(init)) {
+        // once we have hit the cache we have all the permutations
+        // can stop executing and just look up the final value
+        int idx = (itrs % cache.size()) - 1;
+        return cache.entrySet().stream()
+            .filter(e -> e.getValue().idx == idx)
+            .findFirst()
+            .get()
+            .getValue().s;
       } else {
-        cache.put(String.valueOf(init), String.valueOf(dance(init, moves)));
+        String newPrgms = dance(init, moves);
+        cache.put(init, Pair.of(i, newPrgms));
+        init = newPrgms;
       }
     }
     return init;
