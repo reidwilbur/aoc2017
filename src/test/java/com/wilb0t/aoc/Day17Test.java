@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.AbstractMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,8 +33,10 @@ public class Day17Test {
 
   @Test
   public void testSpin_test1_case2() {
+    Map.Entry<Integer, List<Integer>> result =
+        testInst.spin(Lists.newArrayList(0), 2017, test1);
     assertThat(
-        testInst.spin(Lists.newArrayList(0), 2017, test1).getKey(),
+        result.getKey(),
         is(638)
     );
   }
@@ -46,10 +50,18 @@ public class Day17Test {
   }
 
   @Test
-  public void testSpin_input1_case2() {
+  public void testGetIdx1() {
     assertThat(
-        testInst.spin(Lists.newArrayList(0), 50000000, input1).getValue().get(1),
-        is(866)
+        testInst.getIdx1Val(2017, test1),
+        is(1226)
+    );
+  }
+
+  @Test
+  public void testGetIdx1_input1() {
+    assertThat(
+        testInst.getIdx1Val(50000000, input1),
+        is(11995607)
     );
   }
 }
