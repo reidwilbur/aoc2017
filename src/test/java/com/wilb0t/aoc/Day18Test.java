@@ -1,5 +1,7 @@
 package com.wilb0t.aoc;
 
+import static com.wilb0t.aoc.Day18.RCV_REG;
+import static com.wilb0t.aoc.Day18.SND_REG;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -52,24 +54,24 @@ public class Day18Test {
   @Test
   public void testExec_test1() {
     Map<String, Long> regFile = testInst.exec(test1);
-    assertThat(regFile.get("rcv"), is(4L));
+    assertThat(regFile.get(RCV_REG), is(4L));
   }
 
   @Test
   public void testExec_input1() {
     Map<String, Long> regFile = testInst.exec(input1);
-    assertThat(regFile.get("rcv"), is(9423L));
+    assertThat(regFile.get(RCV_REG), is(9423L));
   }
 
   @Test
   public void testExecConc_test2() {
     Day18.MachineState[] states = testInst.execConcurrent(test2);
-    assertThat(states[0].regFile.get("snd"), is(3L));
+    assertThat(states[0].regFile.get(SND_REG), is(3L));
   }
 
   @Test
   public void testExecConc_input2() {
     Day18.MachineState[] states = testInst.execConcurrent(input2);
-    assertThat(states[1].regFile.get("snd"), is(7620L));
+    assertThat(states[1].regFile.get(SND_REG), is(7620L));
   }
 }
