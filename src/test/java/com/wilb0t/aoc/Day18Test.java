@@ -20,16 +20,27 @@ public class Day18Test {
   static List<Day18.Instr> input1;
   static List<Day18.Instr> test1;
 
+  static List<Day18.Instr> input2;
+  static List<Day18.Instr> test2;
+
   Day18 testInst;
 
   @BeforeClass
   public static void beforeClass() throws Exception {
     input1 = Files.lines(new File(Day11Test.class.getResource("/day18.txt").toURI()).toPath())
-        .map(Day18.Instr::toInstr)
+        .map(l -> Day18.Instr.toInstr(l, false))
         .collect(Collectors.toList());
 
     test1 = Files.lines(new File(Day11Test.class.getResource("/day18-test.txt").toURI()).toPath())
-        .map(Day18.Instr::toInstr)
+        .map(l -> Day18.Instr.toInstr(l, false))
+        .collect(Collectors.toList());
+
+    input2 = Files.lines(new File(Day11Test.class.getResource("/day18.txt").toURI()).toPath())
+        .map(l -> Day18.Instr.toInstr(l, true))
+        .collect(Collectors.toList());
+
+    test2 = Files.lines(new File(Day11Test.class.getResource("/day18-test2.txt").toURI()).toPath())
+        .map(l -> Day18.Instr.toInstr(l, true))
         .collect(Collectors.toList());
   }
 
@@ -48,5 +59,17 @@ public class Day18Test {
   public void testExec_input1() {
     Map<String, Long> regFile = testInst.exec(input1);
     assertThat(regFile.get("rcv"), is(9423L));
+  }
+
+  @Test
+  public void testExecConc_test2() {
+    Day18.MachineState[] states = testInst.execConcurrent(test2);
+    assertThat(states[0].regFile.get("snd"), is(3L));
+  }
+
+  @Test
+  public void testExecConc_input2() {
+    Day18.MachineState[] states = testInst.execConcurrent(input2);
+    assertThat(states[1].regFile.get("snd"), is(7620L));
   }
 }
