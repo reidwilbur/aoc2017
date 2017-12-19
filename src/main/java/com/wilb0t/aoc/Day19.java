@@ -1,6 +1,8 @@
 package com.wilb0t.aoc;
 
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -63,32 +65,30 @@ public class Day19 {
   static final Set<Character> PATH_CHARS = Stream.concat(Stream.of('|', '-', '+'), LETTERS.stream())
       .collect(Collectors.toSet());
 
-  String getLetters(List<String> map) {
+  Map.Entry<String, Integer> getLetters(List<String> map) {
     Pos p = new Pos(0, map.get(0).indexOf('|'));
     Dir dir = Dir.D;
+    int steps = 1;
+    p = p.next(dir);
 
     StringBuilder lettersBldr = new StringBuilder();
-    while (p.isValid(map)) {
+    while (p.isValid(map) && PATH_CHARS.contains(p.getMapVal(map))) {
       char c = p.getMapVal(map);
-      //System.out.print(c + " ");
       if (c == '|' || c == '-') {
         p = p.next(dir);
-        //System.out.println(p);
       } else if (c == '+') {
         Pos cp = new Pos(p);
-        //System.out.println(p);
-        dir = Stream.of(dir.getTurnDirs()).filter(d -> PATH_CHARS.contains(cp.next(d).getMapVal(map))).findFirst().get();
+        dir = Stream.of(dir.getTurnDirs())
+            .filter(d -> PATH_CHARS.contains(cp.next(d).getMapVal(map)))
+            .findFirst()
+            .get();
         p = p.next(dir);
       } else if (LETTERS.contains(c)) {
         lettersBldr.append(c);
         p = p.next(dir);
-        //System.out.println(p);
-      } else {
-        return lettersBldr.toString();
       }
+      steps += 1;
     }
-    return lettersBldr.toString();
+    return new AbstractMap.SimpleEntry<>(lettersBldr.toString(), steps);
   }
-
-
 }

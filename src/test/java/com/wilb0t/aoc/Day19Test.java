@@ -1,14 +1,11 @@
 package com.wilb0t.aoc;
 
-import static com.wilb0t.aoc.Day18.RCV_REG;
-import static com.wilb0t.aoc.Day18.SND_REG;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -37,11 +34,21 @@ public class Day19Test {
 
   @Test
   public void testGetLetters_test1() {
-    assertThat(testInst.getLetters(test1), is("ABCDEF"));
+    assertThat(testInst.getLetters(test1).getKey(), is("ABCDEF"));
   }
 
   @Test
   public void testGetLetters_input1() {
-    assertThat(testInst.getLetters(input1), is("FEZDNIVJWT"));
+    assertThat(testInst.getLetters(input1).getKey(), is("FEZDNIVJWT"));
+  }
+
+  @Test
+  public void testGetLetters2_test1() {
+    assertThat(testInst.getLetters(test1).getValue(), is(38));
+  }
+
+  @Test
+  public void testGetLetters2_input1() {
+    assertThat(testInst.getLetters(input1).getValue(), is(17200));
   }
 }
