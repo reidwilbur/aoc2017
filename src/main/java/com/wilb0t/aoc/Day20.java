@@ -1,8 +1,11 @@
 package com.wilb0t.aoc;
 
+import com.google.common.collect.Lists;
+import com.google.common.primitives.Longs;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Day20 {
@@ -12,6 +15,16 @@ public class Day20 {
     final long[] p;
     final long[] v;
     final long[] a;
+
+    @Override
+    public String toString() {
+      return "Particle{" +
+             "id=" + id +
+             ", p=" + Arrays.toString(p) +
+             ", v=" + Arrays.toString(v) +
+             ", a=" + Arrays.toString(a) +
+             '}';
+    }
 
     public Particle(String line, long id) {
       this.id = id;
@@ -57,6 +70,16 @@ public class Day20 {
     public long dist() {
       return p[0]*p[0] + p[1]*p[1] + p[2]*p[2];
     }
+
+    public Particle step() {
+      v[0] += a[0];
+      v[1] += a[1];
+      v[2] += a[2];
+      p[0] += v[0];
+      p[1] += v[1];
+      p[2] += v[2];
+      return this;
+    }
   }
 
   List<Particle> distSort(List<Particle> particles, long t) {
@@ -65,5 +88,20 @@ public class Day20 {
         .map(p -> p.atTime(t))
         .sorted(Comparator.comparing(Particle::dist))
         .collect(Collectors.toList());
+  }
+
+  List<Particle> simulateCollisions(List<Particle> particles, int steps) {
+    List<Particle> simParts = Lists.newArrayList(particles);
+    for(int i = 0; i < steps; i++) {
+      Map<List<Long>, List<Particle>> grpd = simParts.stream()
+          .collect(Collectors.groupingBy(p -> Longs.asList(p.p)));
+
+      simParts = grpd.entrySet().stream()
+          .filter(e -> e.getValue().size() == 1)
+          .flatMap(e -> e.getValue().stream())
+          .map(Particle::step)
+          .collect(Collectors.toList());
+    }
+    return simParts;
   }
 }
