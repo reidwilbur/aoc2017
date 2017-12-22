@@ -156,4 +156,11 @@ public class Day21Test {
     List<String> tile = ImmutableList.of(".#.", "..#", "###");
     assertThat(testInst.litCount(input1, tile, 5), is(125));
   }
+
+  // takes 4.2s to run...
+  //@Test
+  public void testLitCount_input1_2() {
+    List<String> tile = ImmutableList.of(".#.", "..#", "###");
+    assertThat(testInst.litCount(input1, tile, 18), is(1782917));
+  }
 }
