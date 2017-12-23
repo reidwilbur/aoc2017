@@ -1,5 +1,6 @@
 package com.wilb0t.aoc;
 
+import com.google.common.math.LongMath;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,13 @@ public class Day23 {
       this.regFile = new HashMap<>();
       regFile.put(IP, 0L);
       IntStream.range('a', 'i').forEach(i -> regFile.put(String.valueOf((char)i), 0L));
+    }
+
+    public MachineState(long a) {
+      this.regFile = new HashMap<>();
+      regFile.put(IP, 0L);
+      IntStream.range('a', 'i').forEach(i -> regFile.put(String.valueOf((char)i), 0L));
+      regFile.put("a", a);
     }
 
     public Long getVal(String reg) {
@@ -147,9 +155,83 @@ public class Day23 {
     return count;
   }
 
+  public long exec(List<Instr> instrs, MachineState state) {
+    while (state.regFile.get(IP) < instrs.size()) {
+      step(state, instrs);
+    }
+    return state.regFile.get("h");
+  }
+
   MachineState step(MachineState state, List<Instr> instrs) {
     instrs.get(state.regFile.get(IP).intValue()).exec(state);
     state.regFile.compute(IP, (reg, val) -> val + 1);
     return state;
+  }
+
+  public long part2(long aval) {
+    long a, b, c, d, e, f, g, h = 0;
+
+    a = aval;
+
+    b = 67;
+    c = b;
+
+    if (a != 0) {
+      b *= 100;
+      b += 100000;
+      c = b;
+      c += 17000;
+    }
+
+    do {
+      // impls below were doing a really slow prime check on the value of b
+      // using guava fast prime check impl instead
+      f = LongMath.isPrime(b) ? 1 : 0;
+
+      // converted the flat code to for loops to make more sense
+      //for(long didx = 2; didx != b; didx++) {
+      //  for (long eidx = 2; eidx != b; eidx++) {
+      //    if ((didx * eidx) == b) {
+      //      f = 0;
+      //    }
+      //  }
+      //}
+
+      // this was my initial txlation of the assembly to java
+      //d = 2;
+      //do {
+      //  //e = 2;
+      //  //do {
+      //  //  //g = d;
+      //  //  //g *= e;
+      //  //  //g -= b;
+      //  //  //
+      //  //  //if (g == 0) {
+      //  //  //  f = 0;
+      //  //  //}
+      //  //  if ((d * e) == b) {
+      //  //    f = 0;
+      //  //  }
+      //  //  e += 1;
+      //  //  //g = e;
+      //  //  //g -= b;
+      //  //  //} while(g != 0);
+      //  //} while (e != b);
+      //  d += 1;
+      //  //  g = d;
+      //  //  g -= b;
+      //  //} while (g != 0);
+      //} while (d != b);
+
+      if (f == 0) {
+        h += 1;
+      }
+      //g = b;
+      //g -= c;
+      if (b == c) {
+        return h;
+      }
+      b += 17;
+    } while(true);
   }
 }
