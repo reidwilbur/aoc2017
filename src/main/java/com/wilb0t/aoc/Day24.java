@@ -73,9 +73,9 @@ public class Day24 {
   }
 
   static class State {
-    List<Comp> bridge;
-    int portNum;
-    List<Comp> comps;
+    final List<Comp> bridge;
+    final int portNum;
+    final List<Comp> comps;
 
     public State(List<Comp> bridge, int portNum, List<Comp> comps) {
       this.bridge = bridge;
